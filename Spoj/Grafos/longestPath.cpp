@@ -1,4 +1,4 @@
-// solution for problem https://www.hackerrank.com/challenges/bfsshortreach
+// http://www.spoj.com/problems/PT07Z/
 #include <cmath>
 #include <climits>
 #include <queue>
@@ -98,10 +98,10 @@ int main()
 {
 	
 	
-	int nodes, edges, root;
-	getII(nodes,edges);
+	int nodes, root;
+	getI(nodes);
 	vvi AdjList(MAXN);
-	F(i,0,edges)
+	F(i,0,nodes-1)
 	{
 		int a, b;
 		getII(a,b);
