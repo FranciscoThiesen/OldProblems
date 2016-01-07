@@ -79,8 +79,8 @@ const int fxx[8][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}, {1,1}, {1,-1}, {-1,1}, {-1,
 template<typename T,typename TT> ostream& operator<<(ostream &s,pair<T,TT> t) {return s<<"("<<t.first<<","<<t.second<<")";}
 template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<t[i]<<" ";return s; }
 
-vvi AdjList(MAXN);
-vi Dist(MAXN);
+// vvi AdjList(MAXN);
+// vi Dist(MAXN);
 // int bfs(int u,int destiny)
 // {
 // 	queue<int> toVisit;
@@ -96,55 +96,64 @@ vi Dist(MAXN);
 // }
 int main()
 {
-	int t;
-	getI(t);
-	F(i,0,t)
+	
+	
+	int nodes, edges, root;
+	getII(nodes,edges);
+	vvi AdjList(MAXN);
+	F(i,0,edges)
 	{
-		
-		int nodes, edges, root;
-		getII(nodes,edges);
-		vvi AdjList(MAXN);
-		F(i,0,edges)
-		{
-			int a, b;
-			getII(a,b);
-			root = a;
-			AdjList[a].pb(b);
-			AdjList[b].pb(a);
-		}
-		vi Dist(MAXN, INF);
-		queue<int> q;
-		q.push(a);
-		Dist[a] = 0;
-		while(!q.empty())
-		{
-			int u = q.front();
-			q.pop();
-			F(j,0,AdjList[u].size())
-			{
-				int v = AdjList[u][j];
-				if(Dist[v] == INF)
-				{
-					Dist[v] = Dist[u] + 6;
-					q.push(v);
-				}
-			}
-		}
-		FE(i,1,nodes)
-		{
-			if(Dist[i])
-			{
-				if(Dist[i] == INF)
-					cout << -1 << " ";
-				else
-					cout << Dist[i] << " ";
-			}
-		}
-		cout << endl;
-		F(p,0,(int)AdjList.size())
-        {
-            AdjList[p].clear();
-        }
+		int a, b;
+		getII(a,b);
+		root = a;
+		AdjList[a].pb(b);
+		AdjList[b].pb(a);
 	}
+	vi Dist(MAXN, INF);
+	int maxDist = 0;
+	int maxNode;
+	queue<int> q;
+	q.push(root);
+	Dist[root] = 0;
+	while(!q.empty())
+	{
+		int u = q.front();
+		q.pop();
+		F(j,0,AdjList[u].size())
+		{
+			int v = AdjList[u][j];
+			if(Dist[v] == INF)
+			{
+				Dist[v] = Dist[u] + 1;
+				if(Dist[v] >= maxDist)
+				{
+					maxDist = Dist[v];
+					maxNode = v;
+				}
+				q.push(v);
+			}
+		}
+	}
+	fill(Dist.begin(),Dist.end(),INF);
+	maxDist = 0;
+	q.push(maxNode);
+	Dist[maxNode] = 0;
+	while(!q.empty())
+	{
+		int w = q.front();
+		q.pop();
+		F(g,0,(int)AdjList[w].size())
+		{
+			int r = AdjList[w][g];
+			if(Dist[r] == INF)
+			{
+				Dist[r] = Dist[w] + 1;
+				if(Dist[r] > maxDist)
+					maxDist = Dist[r];
+				q.push(r);
+			}
+		}
+	}
+	cout << maxDist << endl;
 	return 0;
 }
