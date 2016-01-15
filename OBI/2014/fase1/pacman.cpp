@@ -64,7 +64,7 @@ inline void pisz(int n) { printf("%d\n",n); }
 #define DBG(vari) cerr<<#vari<<" = "<<(vari)<<endl;
 #define printA(a,L,R) FE(i,L,R) cout << a[i] << (i==R?'\n':' ')
 #define printV(a) printA(a,0,a.size()-1)
-#define MAXN 101
+#define MAXN 1001
 //for vectors
 #define pb push_back
 typedef int elem_t;
@@ -72,25 +72,39 @@ typedef vector<int> vi;
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
 typedef vector<ii> vii;
-// directions
-const int fx[4][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}};
-const int fxx[8][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
-template<typename T,typename TT> ostream& operator<<(ostream &s,pair<T,TT> t) {return s<<"("<<t.first<<","<<t.second<<")";}
-template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<t[i]<<" ";return s; }
 
-int nums[MAXN];
 int main()
 {
-	int a;
-	getI(a);
-	int ans;
-	getI(ans);
-	F(i,1,a)
-	{
-		int k;
-		scanf("%d", &k);
-		ans = ans XOR k;
-	}
-	cout << ans << endl;
-
+    int N;
+    scanf("%d", &N);
+    int max = 0;
+    int curr = 0;
+    string tab;
+    for(int i = 0; i < N; ++i)
+    {
+        string row;
+        cin >> row;
+        if(i%2 == 0)
+        {
+            tab += row;
+        }
+        else
+        {
+            reverse(row.begin(),row.end());
+            tab += row;
+        }
+    }
+    for(int j = 0; j < tab.size(); ++j)
+    {
+        if(tab[j] == 'o')
+            curr++;
+        if(curr > max)
+            max = curr;
+        if(tab[j] == 'A')
+        {
+            curr = 0;    
+        }
+    }
+    cout << max << endl;
+    return 0;
 }
