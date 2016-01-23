@@ -96,7 +96,7 @@ template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<
 int main()
 {
 	int t;
-	getI(t);
+       	getI(t);
 	F(i,0,t)
 	{
 		

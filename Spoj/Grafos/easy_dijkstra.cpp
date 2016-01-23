@@ -1,4 +1,3 @@
-// solution for problem https://www.hackerrank.com/challenges/bfsshortreach
 #include <cmath>
 #include <climits>
 #include <queue>
@@ -13,6 +12,7 @@
 #include <algorithm>
 #include <cstring>
 #include <cassert>
+#include <functional>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -65,7 +65,7 @@ inline void pisz(int n) { printf("%d\n",n); }
 #define DBG(vari) cerr<<#vari<<" = "<<(vari)<<endl;
 #define printA(a,L,R) FE(i,L,R) cout << a[i] << (i==R?'\n':' ')
 #define printV(a) printA(a,0,a.size()-1)
-#define MAXN 1001
+#define MAXN 10000
 //for vectors
 #define pb push_back
 typedef int elem_t;
@@ -73,14 +73,13 @@ typedef vector<int> vi;
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
 typedef vector<ii> vii;
+typedef vector<vii> vvii;
 // directions
 const int fx[4][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}};
 const int fxx[8][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
 template<typename T,typename TT> ostream& operator<<(ostream &s,pair<T,TT> t) {return s<<"("<<t.first<<","<<t.second<<")";}
 template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<t[i]<<" ";return s; }
-
-vvi AdjList(MAXN);
-vi Dist(MAXN);
+ 
 // int bfs(int u,int destiny)
 // {
 // 	queue<int> toVisit;
@@ -103,50 +102,48 @@ int main()
 		
 		int nodes, edges;
 		getII(nodes,edges);
-		vvi AdjList(MAXN);
+		vvii AdjList(MAXN);
 		F(i,0,edges)
 		{
-			int a, b;
-			getII(a,b);
-			AdjList[a].pb(b);
-			AdjList[b].pb(a);
+			int a, b, c;
+			getIII(a,b,c);
+			AdjList[a].pb(mp(c,b));
+			//AdjList[b].pb(mp(c,a));
 		}
-		int root;
-		getI(root);
+		int root, dest;
+		getII(root,dest);
 		vi Dist(MAXN, INF);
 		Dist[root] = 0;
-		queue<int> q;
-		q.push(root);
+		priority_queue<ii, vii, greater<ii> > q;
+		q.push(mp(0,root));
 		Dist[root] = 0;
 		while(!q.empty())
 		{
-			int u = q.front();
+			ii front = q.top();
 			q.pop();
-			F(j,0,AdjList[u].size())
+			int d = front.fi;
+			int u = front.se;
+			if(d > Dist[u])
+				continue;
+			F(j,0,(int)AdjList[u].size())
 			{
-				int v = AdjList[u][j];
-				if(Dist[v] == INF)
+				ii v = AdjList[u][j];
+				if(Dist[u] + v.fi < Dist[v.se])
 				{
-					Dist[v] = Dist[u] + 6;
-					q.push(v);
+					Dist[v.se] = Dist[u] + v.fi;
+					q.push(mp(Dist[v.se],v.se));
 				}
 			}
 		}
-		FE(i,1,nodes)
-		{
-			if(Dist[i])
-			{
-				if(Dist[i] == INF)
-					cout << -1 << " ";
-				else
-					cout << Dist[i] << " ";
-			}
-		}
-		cout << endl;
+ 
+		if(Dist[dest] == INF)
+			cout << "NO" << endl;
+		else
+			cout << Dist[dest] << endl;
 		F(p,0,(int)AdjList.size())
         {
             AdjList[p].clear();
         }
 	}
 	return 0;
-}
+} 

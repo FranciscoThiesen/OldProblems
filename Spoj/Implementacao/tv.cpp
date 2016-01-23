@@ -1,4 +1,3 @@
-// solution for problem https://www.hackerrank.com/challenges/bfsshortreach
 #include <cmath>
 #include <climits>
 #include <queue>
@@ -54,7 +53,7 @@ using namespace std;
 #define ui unsigned int
 #define us unsigned short
 #define IOS ios_base::sync_with_stdio(0); //to synchronize the input of cin and scanf
-#define INF 100000001
+#define INF 1001001001
 #define PI 3.1415926535897932384626
 //for map, pair
 #define mp make_pair
@@ -65,88 +64,118 @@ inline void pisz(int n) { printf("%d\n",n); }
 #define DBG(vari) cerr<<#vari<<" = "<<(vari)<<endl;
 #define printA(a,L,R) FE(i,L,R) cout << a[i] << (i==R?'\n':' ')
 #define printV(a) printA(a,0,a.size()-1)
-#define MAXN 1001
+#define MAXN 10000
 //for vectors
 #define pb push_back
 typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-typedef vector<ii> vii;
-// directions
-const int fx[4][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}};
-const int fxx[8][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
-template<typename T,typename TT> ostream& operator<<(ostream &s,pair<T,TT> t) {return s<<"("<<t.first<<","<<t.second<<")";}
-template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<t[i]<<" ";return s; }
 
-vvi AdjList(MAXN);
-vi Dist(MAXN);
-// int bfs(int u,int destiny)
-// {
-// 	queue<int> toVisit;
-// 	toVisit.push(u);
-// 	if(u == destiny)
-// 		return 0;
-// 	for(int i = 0; i < AdjList[u].size();i++)
-// 	{
-// 		if(AdjList[u][i] == destiny)
-// 			return 6;
-// 	}
-// 	return -1;
-// }
 int main()
 {
-	int t;
-	getI(t);
-	F(i,0,t)
-	{
-		
-		int nodes, edges;
-		getII(nodes,edges);
-		vvi AdjList(MAXN);
-		F(i,0,edges)
-		{
-			int a, b;
-			getII(a,b);
-			AdjList[a].pb(b);
-			AdjList[b].pb(a);
-		}
-		int root;
-		getI(root);
-		vi Dist(MAXN, INF);
-		Dist[root] = 0;
-		queue<int> q;
-		q.push(root);
-		Dist[root] = 0;
-		while(!q.empty())
-		{
-			int u = q.front();
-			q.pop();
-			F(j,0,AdjList[u].size())
-			{
-				int v = AdjList[u][j];
-				if(Dist[v] == INF)
-				{
-					Dist[v] = Dist[u] + 6;
-					q.push(v);
-				}
-			}
-		}
-		FE(i,1,nodes)
-		{
-			if(Dist[i])
-			{
-				if(Dist[i] == INF)
-					cout << -1 << " ";
-				else
-					cout << Dist[i] << " ";
-			}
-		}
-		cout << endl;
-		F(p,0,(int)AdjList.size())
+    int y = 1;
+    int x = 1;
+    int counter = 0;
+    while( x + y != 0)
+    {
+        getII(y,x);
+        if(x+y == 0)
+            break;
+        counter++;
+        int arr[x][y];
+        int aux[x][y];
+        int aux2[x][y];
+        for(int i = 0; i < y; ++i)
         {
-            AdjList[p].clear();
+            for(int j = 0; j < x; ++j)
+            {
+                scanf("%d", &arr[j][i]);
+                aux[j][i] = 0;
+                aux2[j][i] = 0;
+            }
         }
-	}
-	return 0;
+        int difX = 1;
+        int difY = 1;
+        int dx = 0;
+        int dy = 0;
+        while(difX != 0 || difY != 0)
+        {
+            cin >> difX >> difY;
+            dx += difX;
+            dy += difY;
+        }
+        //moving in x
+        cout << dx << endl;
+        if(dx >= 0)
+        {
+            int moverX = dx%x;
+            F(a,0,y)
+            {
+                F(b,0,x)
+                {
+                    if(b + moverX < x)
+                        aux[b+moverX][a] = arr[b][a];
+                    else
+                    {
+                        cout << "potato" << endl;
+                        aux[b-((b+moverX)%x)][a] = arr[b][a];
+                    }
+                }
+            }
+        }
+        else if(dx < 0)
+        {
+            int moverX = dx%-x;
+            cout << moverX << endl;
+            F(f,0,y)
+            {
+                F(g,0,x)
+                {
+                    if(g + moverX >= 0)
+                        aux[g+moverX][f] = arr[g][f];
+                    else
+                        aux[x+moverX+g][f] = arr[g][f];
+                }
+            }
+        }
+        if(dy >= 0)
+        {
+            int moverY = dy%y;
+            F(q,0,y)
+            {
+                F(w,0,x)
+                {
+                    if(q + moverY < y)
+                        aux2[w][q+moverY] = aux[w][q];
+                    else
+                        aux2[w][q-(q+moverY-y+q)] = aux[w][q];
+                }
+            }
+        }
+        else if(dy < 0)
+        {
+            int moverY = dy%-y;
+            F(t,0,y)
+            {
+                F(h,0,x)
+                {
+                    if(t + moverY >= 0)
+                        aux2[h][t+moverY] = aux[h][t];
+                    else
+                        aux2[h][y+moverY+t] = aux[h][t];
+                }
+            }
+        }
+        cout << "Teste " << counter << endl;
+        F(v,0,y)
+        {
+            F(c,0,x)
+            {
+                cout << aux[c][v] << " ";
+            }
+            cout << endl;
+        }
+    }
+    return 0;
 }
