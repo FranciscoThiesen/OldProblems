@@ -8,26 +8,40 @@ using namespace std;
 
 int main()
 {
-    vector<double> r;
+    vector<long long> r;
+    vector<long long> shots;
     int c, s;
     scanf("%d%d", &c, &s);
     for(int i = 0; i < c; ++i)
     {
-        int x;
-        scanf("%lf", &x);
-        r.push_back(x);
+        long long x;
+        scanf("%lld", &x);
+        r.push_back(x*x);
     }
     unsigned long long int pts = 0;
-    long f = 0;
+    int f = 0;
     for(int j = 0; j < s; ++j)
     {
         int x, y;
         scanf("%d%d", &x, &y);
-        auto up = lower_bound(r.begin(),r.end(),sqrt(x*x + y*y));
-        cout << c - (up - r.begin()) << endl;
-        pts += max(f, c -  (up - r.begin()));
-        cout << pts << endl;
+        auto it = upper_bound(r.begin(), r.end(), x*x + y*y);
+        //for(int i = 0; i < r.size();i++)
+        //{
+          //  if(x*x + y*y <= r[i]*r[i] )
+           // {
+             //   pts++;
+            //}
+        //}
+        //
+        
+        int idx = distance(r.begin(), it);
+        if(x*x + y*y == r[idx-1])
+            pts++;
+        if(x*x + y*y == r[idx])
+            pts++;
+        pts += max(0,c-(idx));
     }
+
     cout << pts << endl;
     return 0;
 }

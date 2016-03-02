@@ -1,17 +1,33 @@
 #include <cmath>
+#include <climits>
 #include <queue>
 #include <vector>
 #include <map>
 #include <cstdlib>
+#include <fstream>
 #include <iomanip>   
 #include <iostream>  
 #include <sstream>  // istringstream buffer(myString);
 #include <stack>
 #include <algorithm>
 #include <cstring>
+#include <cassert>
+#include <set>
+#include <unordered_map>
 #include <unordered_set>
 using namespace std;
+#define gcd                         __gcd
+#define OR |
+#define AND &
+#define XOR ^
+#define bit(x,i) (x&(1<<i))  //select the bit of position i of x
+#define lowbit(x) ((x)&((x)^((x)-1))) //get the lowest bit of x
+#define hBit(msb,n) asm("bsrl %1,%0" : "=r"(msb) : "r"(n)) //get the highest bit of x, maybe the fastest
 #define max(a,b) (a<b?b:a)
+#define IN(i,l,r) (l<i&&i<r) //the next for are for checking bound
+#define LINR(i,l,r) (l<=i&&i<=r)
+#define LIN(i,l,r) (l<=i&&i<r)
+#define INR(i,l,r) (l<i&&i<=r)
 #define F(i,L,R) for (int i = L; i < R; i++) //next four are for "for loops"
 #define FE(i,L,R) for (int i = L; i <= R; i++)
 #define FF(i,L,R) for (int i = L; i > R; i--)
@@ -19,6 +35,9 @@ using namespace std;
 #define getI(a) scanf("%d", &a) //next three are handy ways to get ints, it's also force you to use '&' sign
 #define getII(a,b) scanf("%d%d", &a, &b)
 #define getIII(a,b,c) scanf("%d%d%d", &a, &b, &c)
+#define wez(n) int (n); scanf("%d",&(n)) //handy if the input is right after the definition of a variable
+#define wez2(n,m) int (n),(m); scanf("%d %d",&(n),&(m))
+#define wez3(n,m,k) int (n),(m),(k); scanf("%d %d %d",&(n),&(m),&(k))
 #define TESTS wez(testow)while(testow--) //for multilple cases problems
 #define whileZ int T; getI(T); while(T--) // the same as above
 #define getS(x) scanf("%s", x) //get a char* string
@@ -37,7 +56,7 @@ using namespace std;
 #define ui unsigned int
 #define us unsigned short
 #define IOS ios_base::sync_with_stdio(0); //to synchronize the input of cin and scanf
-#define INF 100000001
+#define INF 1001001001
 #define PI 3.1415926535897932384626
 //for map, pair
 #define mp make_pair
@@ -48,42 +67,47 @@ inline void pisz(int n) { printf("%d\n",n); }
 #define DBG(vari) cerr<<#vari<<" = "<<(vari)<<endl;
 #define printA(a,L,R) FE(i,L,R) cout << a[i] << (i==R?'\n':' ')
 #define printV(a) printA(a,0,a.size()-1)
-#define MAXN 1001
+#define MAXN 10000
 //for vectors
 #define pb push_back
 typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-typedef vector<ii> vii;
 
 int main()
 {
-    int a,b;
-    getII(a,b);
-    unordered_set<int> plays;
-    int vec[b];
-    F(i,0,a)
+    int chap, max;
+    cin >> chap >> max;
+    int sum = 0;
+    int vec[chap];
+    for(int i = 0; i < chap; ++i)
     {
-        int x;
-        cin >> x;
-        plays.insert(x);
+        scanf("%d", &vec[i]);
+        sum += vec[i];
     }
-    F(j,0,b)
+    int page = 1;
+    int prob = 0;
+    int total = 0;
+    for(int q = 0; q < chap; q++)
     {
-        int p;
-        cin >> p;
-        vec[j] = p;
-        if(plays.find(p) == plays.end())
+        int cur = 1;
+        for(int w = 0; w < vec[q]; w++)
         {
-            cout << p << endl;
-            return 0;
+            if(w < vec[q]-1 && cur == max)
+                page++;
+            if(cur == page)
+                total++;
+            cout << cur << endl << page << endl;
+            cur++;
+            
+
+
         }
-        else
-            for(int g = j; g >= 0; g--)
-                plays.insert(p+vec[g]);
+        page++;
+
     }
-    cout << "sim" << endl;
+    cout << total << endl;
     return 0;
 }
 

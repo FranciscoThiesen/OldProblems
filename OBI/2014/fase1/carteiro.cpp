@@ -90,7 +90,7 @@ int main()
     {
         int dest;
         cin >> dest;
-        auto iter = casas.find(dest);
+        map<int,int>::iterator iter = casas.find(dest);
         total += abs(atual - (iter->second));
         atual = iter->second;
     }
