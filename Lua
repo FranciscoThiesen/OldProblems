@@ -1,0 +1,14 @@
+function bhaskara(a,b,c)
+    if(a == 0) then
+        print("A nao pode ser zero seu puto")
+        return 0
+    elseif b*b - 4*a*c >= 0 then
+        x = (-b + math.sqrt(b*b - 4*a*c))/(2*a)
+        y = (-b - math.sqrt(b*b - 4*a*c))/(2*a)
+        print(x, y)
+    else 
+        print("Nao possui raizes reais")
+    end
+end
+bhaskara(-10,55,3)
+
