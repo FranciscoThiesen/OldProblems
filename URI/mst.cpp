@@ -80,6 +80,4 @@ int main()
         cout << total - totalCost << endl; 
     }
     return 0;
-
-
 }
