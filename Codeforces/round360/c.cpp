@@ -16,6 +16,7 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <string>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -75,33 +76,87 @@ typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-// directions
-const int fx[4][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}};
-const int fxx[8][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
-template<typename T,typename TT> ostream& operator<<(ostream &s,pair<T,TT> t) {return s<<"("<<t.first<<","<<t.second<<")";}
-template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<t[i]<<" ";return s; }
+vector<vector<int> > AdjList(100001);
+vector<int> colorArr(1000001, -1);
+vi setI;
+vi setII;
+vi dist(100050, -1);
+bool bfs(int src)
+{
+	queue<int> q;
+	q.push(src);
+	dist[src] = 0;
+	while(!q.empty())
+	{
+		int u = q.front();
+		q.pop();
+		if(dist[u]%2 == 0)
+			setI.pb(u);
+		else
+			setII.pb(u);
+		F(v, 0, AdjList[u].size())
+		{
+			if(dist[AdjList[u][v]] == -1)
+			{
+				dist[AdjList[u][v]] = dist[u] + 1;
+				q.push(AdjList[u][v]);
+			}
+			else if(dist[u]%2 == dist[AdjList[u][v]]%2)
+			{
+				return false;
+			}
+		}
 
+	}
+	return true;
+}
 int main()
 {
-    int t;
-    getI(t);
-    while(t--)
-    {
-        int total = 0;
-        int op = 0;
-        string s;
-        cin >> s;
-        F(i,0,s.size())
-        {
-            if(s[i] == '<')
-                op++;
-            else if(s[i] == '>' && op >= 1)
-            {
-                total++;
-                op--;
-            }
-        }
-        cout << total << endl;
-    }
-    return 0;
+	int nodes, edges;
+	getII(nodes, edges);
+    for(auto& p : colorArr)
+		p = -1;
+	int fst = 1;
+	F(i,0,edges)
+	{
+		int a, b;
+		getII(a,b);
+		if(i == 0)
+			fst = a-1;
+		AdjList[a-1].pb(b-1);
+		AdjList[b-1].pb(a-1);
+	}
+	bool bpd = true;
+	F(j,0,nodes)
+	{
+		if(dist[j] == -1)
+		{
+			bool bip = bfs(j);
+			if(!bip)
+			{
+				bpd = false;
+				break;
+			}
+
+		}
+	}
+	if(!bpd)
+		cout << -1 << endl;
+	else
+	{
+		cout << setI.size() << endl;
+		for(auto& p : setI)
+		{
+			cout << p+1 << " ";
+		}
+		cout << endl;
+		cout << setII.size() << endl;
+		for(auto& p : setII)
+		{
+			cout << p+1 << " ";
+		}
+		cout << endl;
+	}
+	return 0;
+
 }

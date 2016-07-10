@@ -16,6 +16,7 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <string>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -64,44 +65,66 @@ using namespace std;
 #define fi first
 #define se second
 // for debug
-inline void pisz(int n) { printf("%d\n",n); }
 #define DBG(vari) cerr<<#vari<<" = "<<(vari)<<endl;
 #define printA(a,L,R) FE(i,L,R) cout << a[i] << (i==R?'\n':' ')
 #define printV(a) printA(a,0,a.size()-1)
 #define MAXN 10000
 //for vectors
 #define pb push_back
+
+int gcd(int x, int y) { return y ? gcd(y, x % y) : abs(x); }
+
 typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-// directions
-const int fx[4][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}};
-const int fxx[8][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
-template<typename T,typename TT> ostream& operator<<(ostream &s,pair<T,TT> t) {return s<<"("<<t.first<<","<<t.second<<")";}
-template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<t[i]<<" ";return s; }
+
+typedef pair<ull, ull> bezout;
 
 int main()
 {
     int t;
     getI(t);
+    ull s,c;
     while(t--)
     {
-        int total = 0;
-        int op = 0;
-        string s;
-        cin >> s;
-        F(i,0,s.size())
+        cin >> s >> c;
+        bool pos = false;
+        ull triNum = ((s-1)*s)/2;
+        ull mn = (s*(s+1))/2;
+        if(s == 2)
         {
-            if(s[i] == '<')
-                op++;
-            else if(s[i] == '>' && op >= 1)
-            {
-                total++;
-                op--;
-            }
+            mn = 3;
+            if(c >= mn)
+                cout << "Yes" << endl;
+            else
+                cout << "No" << endl;
         }
-        cout << total << endl;
+        else if(s == 1)
+        {
+            cout << "Yes" << endl;
+        }
+        else if(c >= mn)
+        {
+            // cout << c << "min " << mn << endl;
+            // cout << c%mn << endl;
+            // cout << triNum << endl;
+            if((c-mn)%triNum == 0)
+                pos = true;
+            else if (c==mn)
+                pos = true;
+            else if((c%mn)%s == 0)
+                pos = true;
+            if(pos)
+                cout << "Yes"<< endl;
+            else
+                cout << "No" << endl;
+        }
+        else
+            cout << "No" << endl;
+        // if(s == c || s+c != 2)
+        //     pos = false;
+        
     }
     return 0;
 }

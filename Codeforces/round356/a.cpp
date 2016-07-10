@@ -16,6 +16,7 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <string>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -75,33 +76,35 @@ typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-// directions
-const int fx[4][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}};
-const int fxx[8][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
-template<typename T,typename TT> ostream& operator<<(ostream &s,pair<T,TT> t) {return s<<"("<<t.first<<","<<t.second<<")";}
-template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<t[i]<<" ";return s; }
 
 int main()
 {
-    int t;
-    getI(t);
-    while(t--)
-    {
-        int total = 0;
-        int op = 0;
-        string s;
-        cin >> s;
-        F(i,0,s.size())
-        {
-            if(s[i] == '<')
-                op++;
-            else if(s[i] == '>' && op >= 1)
-            {
-                total++;
-                op--;
-            }
-        }
-        cout << total << endl;
-    }
-    return 0;
+	vector<int> freq(101,0);
+	int a,b,c,d,e;
+	cin >> a >> b >> c >> d >> e;
+	int sum = a + b + c + d + e;
+	freq[a]++;
+	freq[b]++;
+	freq[c]++;
+	freq[d]++;
+	freq[e]++;
+	int mx = 0;
+	F(i,0,freq.size())
+	{
+		if(freq[i] >= 2)
+		{
+			if(freq[i] >= 3)
+			{
+				if(i*3 > mx)
+					mx = i*3;
+			}
+			else
+			{
+				if(i*2 > mx)
+					mx = i*2;
+			}
+		}
+	}
+	cout << sum - mx << endl;
+	return 0;
 }

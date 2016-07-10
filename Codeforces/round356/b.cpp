@@ -16,6 +16,7 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <string>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -75,33 +76,34 @@ typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-// directions
-const int fx[4][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}};
-const int fxx[8][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
-template<typename T,typename TT> ostream& operator<<(ostream &s,pair<T,TT> t) {return s<<"("<<t.first<<","<<t.second<<")";}
-template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<t[i]<<" ";return s; }
 
 int main()
 {
-    int t;
-    getI(t);
-    while(t--)
-    {
-        int total = 0;
-        int op = 0;
-        string s;
-        cin >> s;
-        F(i,0,s.size())
-        {
-            if(s[i] == '<')
-                op++;
-            else if(s[i] == '>' && op >= 1)
-            {
-                total++;
-                op--;
-            }
-        }
-        cout << total << endl;
-    }
-    return 0;
+	int size, begin;
+	getII(size, begin);
+	int c[size];
+	int ans = 0;
+	// if(c[begin-1] == 1)
+	// 	ans = 1;
+	vector<int> dist(100, 0);
+	F(i,0,size)
+	{
+		scanf("%d", &c[i]);
+		if(c[i] == 1)
+			dist[abs((begin-1) - i)]++;
+	}
+	if(c[begin-1] == 1)
+		ans++;
+	int left = begin-1;
+	int right = size-1-begin;
+	int r = min(left, right);
+	for(int i = 1; i < 100; ++i)
+	{
+		if(dist[i] == 2)
+			ans+=2;
+		else if(dist[i] == 1 && i > r)
+			ans++;
+	}
+	cout << ans << endl;
+	return 0;
 }

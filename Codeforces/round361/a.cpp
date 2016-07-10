@@ -16,6 +16,7 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <string>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -75,33 +76,54 @@ typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-// directions
-const int fx[4][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}};
-const int fxx[8][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
-template<typename T,typename TT> ostream& operator<<(ostream &s,pair<T,TT> t) {return s<<"("<<t.first<<","<<t.second<<")";}
-template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<t[i]<<" ";return s; }
 
 int main()
 {
-    int t;
-    getI(t);
-    while(t--)
-    {
-        int total = 0;
-        int op = 0;
-        string s;
-        cin >> s;
-        F(i,0,s.size())
-        {
-            if(s[i] == '<')
-                op++;
-            else if(s[i] == '>' && op >= 1)
-            {
-                total++;
-                op--;
-            }
-        }
-        cout << total << endl;
-    }
-    return 0;
+	int n;
+	getI(n);
+	string s;
+	cin >> s;
+	vector<int> seq;
+	for(auto& p : s)
+	{
+		seq.pb(p - '0');
+	}
+	bool pos = false;
+	vector<int> aux = seq;
+	bool pos1 = true;
+	bool pos2 = true;
+	bool pos3 = true;
+	bool pos4 = true;
+	F(i,0,seq.size())
+	{	//tentando jogar para a esquerda
+		
+		for(int j = 0; j < n; ++j)
+		{
+			if(seq[j] == 1 || seq[j] == 4 || seq[j] == 7 || seq[j] == 0)
+				pos1 = false;
+		}
+		//direita
+		F(k,0,n)
+		{
+			if(seq[k] == 3 || seq[k] == 6 || seq[k] == 9 || seq[k] == 0)
+				pos2 = false;
+		}
+		//cima
+		F(r,0,n)
+		{
+			if(seq[r] == 1 || seq[r] == 2 || seq[r] == 3)
+				pos3 = false;	
+		}
+		F(q,0,n)
+		{
+			if(seq[q] == 7 || seq[q] == 8 || seq[q] == 9 || seq[q] == 0)
+				pos4 = false;	
+		}
+
+	}
+	if(pos1 || pos2 || pos3 || pos4)
+		cout << "NO" << endl;
+	else cout << "YES" << endl;
+	return 0;
+
 }

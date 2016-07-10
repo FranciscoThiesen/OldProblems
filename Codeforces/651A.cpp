@@ -10,8 +10,10 @@ int main()
     int a, b;
     scanf("%d %d", &a, &b);
     int total = 0;
-    while(a > 1 && b > 1)
+    while(a > 0 && b > 0)
     {
+        if(a + b == 2)
+            break;
         if(a > b)
         {
             b += 1;

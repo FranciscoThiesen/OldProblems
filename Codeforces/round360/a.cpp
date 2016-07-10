@@ -16,6 +16,7 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <string>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -75,33 +76,43 @@ typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-// directions
-const int fx[4][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}};
-const int fxx[8][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
-template<typename T,typename TT> ostream& operator<<(ostream &s,pair<T,TT> t) {return s<<"("<<t.first<<","<<t.second<<")";}
-template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<t[i]<<" ";return s; }
 
 int main()
 {
-    int t;
-    getI(t);
-    while(t--)
-    {
-        int total = 0;
-        int op = 0;
-        string s;
-        cin >> s;
-        F(i,0,s.size())
-        {
-            if(s[i] == '<')
-                op++;
-            else if(s[i] == '>' && op >= 1)
-            {
-                total++;
-                op--;
-            }
-        }
-        cout << total << endl;
-    }
-    return 0;
+	int size, days;
+	getII(size, days);
+	vector<int> vec(days,0);
+	F(i,0,days)
+	{
+		string pres;
+		cin >> pres;
+		bool abt = false;
+		for(auto& p : pres)
+		{
+			if(p == '0')
+			{
+				abt = true;
+				break;
+			}
+		}
+		if(abt)
+			vec[i] = 0;
+		else
+			vec[i] = 1;
+	}
+	int mx = 0;
+	int cur = 0;
+	for(int j = 0; j < days; ++j)
+	{
+		if(vec[j] == 0)
+			cur++;
+		if(cur > mx)
+			mx = cur;
+		if(vec[j] == 1)
+		{
+			cur = 0;
+		}
+	}
+	cout << mx << endl;
+	return 0;
 }

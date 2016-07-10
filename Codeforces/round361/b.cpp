@@ -16,6 +16,8 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <string>
+#include <algorithm>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -57,7 +59,7 @@ using namespace std;
 #define ui unsigned int
 #define us unsigned short
 #define IOS ios_base::sync_with_stdio(0); //to synchronize the input of cin and scanf
-#define INF 1001001001
+#define INF 1000000000
 #define PI 3.1415926535897932384626
 //for map, pair
 #define mp make_pair
@@ -75,33 +77,45 @@ typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-// directions
-const int fx[4][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}};
-const int fxx[8][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
-template<typename T,typename TT> ostream& operator<<(ostream &s,pair<T,TT> t) {return s<<"("<<t.first<<","<<t.second<<")";}
-template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<t[i]<<" ";return s; }
+
 
 int main()
 {
-    int t;
-    getI(t);
-    while(t--)
+    int n;
+    cin >> n;
+    vvi AdjList(n);
+    //vector<int> stcut;
+    F(i,0,n)
     {
-        int total = 0;
-        int op = 0;
-        string s;
-        cin >> s;
-        F(i,0,s.size())
-        {
-            if(s[i] == '<')
-                op++;
-            else if(s[i] == '>' && op >= 1)
-            {
-                total++;
-                op--;
-            }
-        }
-        cout << total << endl;
+        int x;
+        cin >> x;
+        AdjList[i].pb(x-1);
     }
-    return 0;
+    F(j,0,n-1)
+    {
+    	AdjList[j].pb(j+1);
+    	AdjList[j+1].pb(j);
+    }
+    vi dist(n, INF);
+    dist[0] = 0;
+    queue<int> q;
+	q.push(0);
+	while(!q.empty())
+	{
+		int u = q.front();
+		q.pop();
+		F(j,0,AdjList[u].size())
+		{
+			int v = AdjList[u][j];
+			if(dist[v] == INF)
+			{
+				dist[v] = dist[u] + 1;
+				q.push(v);
+			}
+		}
+	}
+	F(i,0,n)
+		cout << dist[i] << " ";
+	cout << endl;
+   	return 0;
 }

@@ -16,6 +16,8 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <string>
+#include <functional>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -57,7 +59,7 @@ using namespace std;
 #define ui unsigned int
 #define us unsigned short
 #define IOS ios_base::sync_with_stdio(0); //to synchronize the input of cin and scanf
-#define INF 1001001001
+#define INF 100000001
 #define PI 3.1415926535897932384626
 //for map, pair
 #define mp make_pair
@@ -75,33 +77,80 @@ typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-// directions
-const int fx[4][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}};
-const int fxx[8][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
-template<typename T,typename TT> ostream& operator<<(ostream &s,pair<T,TT> t) {return s<<"("<<t.first<<","<<t.second<<")";}
-template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<t[i]<<" ";return s; }
+typedef vector<ii> vii;
+typedef vector<vii> vvii;
+
 
 int main()
 {
-    int t;
-    getI(t);
-    while(t--)
-    {
-        int total = 0;
-        int op = 0;
-        string s;
-        cin >> s;
-        F(i,0,s.size())
-        {
-            if(s[i] == '<')
-                op++;
-            else if(s[i] == '>' && op >= 1)
-            {
-                total++;
-                op--;
-            }
-        }
-        cout << total << endl;
-    }
-    return 0;
+	int n;
+	getI(n);
+	vvii AdjList(n);
+	int arr[n];
+	F(i,0,n)
+		scanf("%d", &arr[i]);
+	F(j,0,n)
+	{
+		int x, y;
+		getII(x,y);
+		AdjList[j].pb(mp(x,y)); // adicionando o pair nó + custo a lista de adjacencia
+	}
+	vi visitOrder;
+	visitOrder.pb(0);
+	vector<bool> visited(n, false);
+	visited[0] = true;
+	queue<int> q;
+	q.push(0);
+	while(!q.empty())
+	{
+		int node = q.front();
+		q.pop();
+		for(int elem = 0; elem < AdjList[node].size(); ++elem)
+		{
+			if(visited[AdjList[node][elem].fi] == false)
+			{
+				visited[AdjList[node][elem].fi] = true;
+				visitOrder.pb(AdjList[node][elem].fi);
+				q.push(AdjList[node][elem].fi);
+			}
+		}
+	}
+	vector<bool> eliminado(n, false);
+	int ans = 0;
+	vi Dist(n, INF);
+	for(int no = 0; no < visitOrder.size(); ++no)
+	{
+		if(eliminado[no] == false || eliminado[no] == true)
+		{
+			fill(Dist.begin(), Dist.end(), INF);
+			queue<int> fila;
+			int root = visitOrder[no];
+			Dist[root] = 0;
+			fila.push(root);
+			while(!fila.empty())
+			{
+				int u = fila.front();
+				fila.pop();
+				F(vertex, 0, AdjList[u].size())
+				{
+					if(eliminado[u] == true)
+						eliminado[AdjList[u][vertex].fi] = true;
+					if(Dist[AdjList[u][vertex].fi] == INF)
+					{
+						Dist[AdjList[u][vertex].fi] = Dist[u] + AdjList[u][vertex].se;
+						if(Dist[AdjList[u][vertex].fi] > arr[AdjList[u][vertex].fi])
+						{
+							eliminado[AdjList[u][vertex].fi] = true;
+						}
+						fila.push(AdjList[u][vertex].fi);
+						if(eliminado[AdjList[u][vertex].fi] == true)
+							ans++;
+					}
+				}
+			}
+		}
+	}
+	cout << ans << endl;
+	return 0;
+
 }

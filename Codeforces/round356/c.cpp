@@ -16,6 +16,7 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <string>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -71,37 +72,52 @@ inline void pisz(int n) { printf("%d\n",n); }
 #define MAXN 10000
 //for vectors
 #define pb push_back
-typedef int elem_t;
-typedef vector<int> vi; 
-typedef vector<vi> vvi; 
-typedef pair<int,int> ii; 
-// directions
-const int fx[4][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}};
-const int fxx[8][2] = {{0,1}, {0,-1}, {1,0}, {-1,0}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
-template<typename T,typename TT> ostream& operator<<(ostream &s,pair<T,TT> t) {return s<<"("<<t.first<<","<<t.second<<")";}
-template<typename T> ostream& operator<<(ostream &s,vector<T> t){F(i,0,SZ(t))s<<t[i]<<" ";return s; }
 
 int main()
 {
-    int t;
-    getI(t);
-    while(t--)
-    {
-        int total = 0;
-        int op = 0;
-        string s;
-        cin >> s;
-        F(i,0,s.size())
-        {
-            if(s[i] == '<')
-                op++;
-            else if(s[i] == '>' && op >= 1)
-            {
-                total++;
-                op--;
-            }
-        }
-        cout << total << endl;
-    }
-    return 0;
+	vector<int> prim;
+	int div = 0;
+	prim.pb(2);
+	prim.pb(3);
+	prim.pb(4);
+	prim.pb(5);
+	prim.pb(7);//5
+	prim.pb(9);
+	prim.pb(11);
+	prim.pb(13);
+	prim.pb(17);
+	prim.pb(19);//10
+	prim.pb(23);
+	prim.pb(25);
+	prim.pb(29);
+	prim.pb(31);
+	prim.pb(37);//15
+	prim.pb(41);
+	prim.pb(43);
+	prim.pb(47);
+	prim.pb(49);
+	vector<int> divs;
+	for(int i = 0; i < prim.size(); ++i)
+	{
+		printf("%d\n", prim[i]);
+		fflush(stdout);
+		char ans[3];
+		scanf("%s", ans);
+		if(strcmp(ans, "yes") == 0)
+		{
+			div++;
+		}
+		if(div >= 2)
+		{
+			printf("composite\n");
+			fflush(stdout);
+			return 0;
+		}
+	}
+	if(div <= 1)
+	{
+		printf("prime\n");
+		fflush(stdout);
+	}
+	return 0;
 }
