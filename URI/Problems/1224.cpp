@@ -17,7 +17,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <string>
-#include <functional>
+#include <cstring>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -26,7 +26,6 @@ using namespace std;
 #define bit(x,i) (x&(1<<i))  //select the bit of position i of x
 #define lowbit(x) ((x)&((x)^((x)-1))) //get the lowest bit of x
 #define hBit(msb,n) asm("bsrl %1,%0" : "=r"(msb) : "r"(n)) //get the highest bit of x, maybe the fastest
-#define max(a,b) (a<b?b:a)
 #define IN(i,l,r) (l<i&&i<r) //the next for are for checking bound
 #define LINR(i,l,r) (l<=i&&i<=r)
 #define LIN(i,l,r) (l<=i&&i<r)
@@ -59,7 +58,7 @@ using namespace std;
 #define ui unsigned int
 #define us unsigned short
 #define IOS ios_base::sync_with_stdio(0); //to synchronize the input of cin and scanf
-#define INF 100000001
+#define INF 1001001001
 #define PI 3.1415926535897932384626
 //for map, pair
 #define mp make_pair
@@ -70,87 +69,53 @@ inline void pisz(int n) { printf("%d\n",n); }
 #define DBG(vari) cerr<<#vari<<" = "<<(vari)<<endl;
 #define printA(a,L,R) FE(i,L,R) cout << a[i] << (i==R?'\n':' ')
 #define printV(a) printA(a,0,a.size()-1)
-#define MAXN 10000
+#define MAXN 10010
 //for vectors
 #define pb push_back
 typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-typedef vector<ii> vii;
-typedef vector<vii> vvii;
+
+ll total[MAXN] = {0};
+ll nums[MAXN] = {0};
+ll mat[MAXN][MAXN] = {{0}};
+
+ll best(int i, int j)
+{
+    if(i == j)
+        return mat[i][j] = nums[i];
+    return mat[i][j] = max(total[j] - total[i] - best(i+1, j) + nums[i], total[j] - total[i] - best(i, j-1) + nums[j]);
+}
 
 
 int main()
 {
-	int n;
-	getI(n);
-	vvii AdjList(n);
-	int arr[n];
-	F(i,0,n)
-		scanf("%d", &arr[i]);
-	F(j,0,n)
-	{
-		int x, y;
-		getII(x,y);
-		AdjList[j].pb(mp(x,y)); // adicionando o pair nó + custo a lista de adjacencia
-	}
-	vi visitOrder;
-	visitOrder.pb(0);
-	vector<bool> visited(n, false);
-	visited[0] = true;
-	queue<int> q;
-	q.push(0);
-	while(!q.empty())
-	{
-		int node = q.front();
-		q.pop();
-		for(int elem = 0; elem < AdjList[node].size(); ++elem)
-		{
-			if(visited[AdjList[node][elem].fi] == false)
-			{
-				visited[AdjList[node][elem].fi] = true;
-				visitOrder.pb(AdjList[node][elem].fi);
-				q.push(AdjList[node][elem].fi);
-			}
-		}
-	}
-	vector<bool> eliminado(n, false);
-	int ans = 0;
-	vi Dist(n, INF);
-	for(int no = 0; no < visitOrder.size(); ++no)
-	{
-		if(eliminado[no] == false || eliminado[no] == true)
-		{
-			fill(Dist.begin(), Dist.end(), INF);
-			queue<int> fila;
-			int root = visitOrder[no];
-			Dist[root] = 0;
-			fila.push(root);
-			while(!fila.empty())
-			{
-				int u = fila.front();
-				fila.pop();
-				F(vertex, 0, AdjList[u].size())
-				{
-					if(eliminado[u] == true)
-						eliminado[AdjList[u][vertex].fi] = true;
-					if(Dist[AdjList[u][vertex].fi] == INF)
-					{
-						Dist[AdjList[u][vertex].fi] = Dist[u] + AdjList[u][vertex].se;
-						if(Dist[AdjList[u][vertex].fi] > arr[AdjList[u][vertex].fi])
-						{
-							eliminado[AdjList[u][vertex].fi] = true;
-						}
-						fila.push(AdjList[u][vertex].fi);
-						if(eliminado[AdjList[u][vertex].fi] == true)
-							ans++;
-					}
-				}
-			}
-		}
-	}
-	cout << ans << endl;
-	return 0;
-
+    int t;
+    while(scanf("%d", &t) != EOF)
+    {
+        F(i,0,t)
+        {
+            scanf("%lld", &nums[i]);
+            if(i == 0)
+                total[i] = nums[i];
+            else
+                total[i] = total[i-1] + nums[i];
+        }
+        F(i,0,t)
+            mat[i][i] = nums[i];
+        best(t-1, 0);
+        F(y, 0, t)
+        {
+            F(x, 0, t)
+            {
+                cout << mat[x][y] << " ";
+            }
+            cout << endl;
+        }
+        cout << mat[t-1][0] << endl;
+        memset(mat, 0, sizeof(mat));
+        //memset(total, 0, sizeof(total));
+    }
+    return 0;
 }

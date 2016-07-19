@@ -15,9 +15,8 @@
 #include <cassert>
 #include <set>
 #include <unordered_map>
-#include <unordered_set>
-#include <string>
 #include <functional>
+#include <unordered_set>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -59,14 +58,13 @@ using namespace std;
 #define ui unsigned int
 #define us unsigned short
 #define IOS ios_base::sync_with_stdio(0); //to synchronize the input of cin and scanf
-#define INF 100000001
 #define PI 3.1415926535897932384626
 //for map, pair
 #define mp make_pair
 #define fi first
 #define se second
 // for debug
-inline void pisz(int n) { printf("%d\n",n); }
+inline void pisz(int n) { printf("%d\n", n); }
 #define DBG(vari) cerr<<#vari<<" = "<<(vari)<<endl;
 #define printA(a,L,R) FE(i,L,R) cout << a[i] << (i==R?'\n':' ')
 #define printV(a) printA(a,0,a.size()-1)
@@ -74,83 +72,121 @@ inline void pisz(int n) { printf("%d\n",n); }
 //for vectors
 #define pb push_back
 typedef int elem_t;
-typedef vector<int> vi; 
-typedef vector<vi> vvi; 
-typedef pair<int,int> ii; 
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef pair<int, int> ii;
 typedef vector<ii> vii;
 typedef vector<vii> vvii;
+const int INF = 0x3F3F3F3F;
+vvii AdjList(1010);
+vi CostPerRoom(1001,0);//indice corresponde ao no -> soma dos custos minimos para matar os monstros presentes em cada salao
+//vi CostPerMonsterLife(1001, INF);// custo minimo em funcao da vida do monstro
+//vvi MonstersPerRoom(1001); Parece redundante
+vi MinMP(1001, INF);
+vii Magia;// precisa estar ordenado
+vi Dist(1001, INF);
+vii Edges;
 
+int knapsack(int hp)
+{
+	if (MinMP[hp] != INF)
+		return MinMP[hp];
+	for (int i = 0; i < Magia.size(); ++i)
+	{	
+		if(hp - Magia[i].second >= 0) 
+			MinMP[hp] = min(MinMP[hp], MinMP[hp - Magia[i].second] + Magia[i].first);
+		else
+			MinMP[hp] = min(MinMP[hp], MinMP[0] + Magia[i].first);
+	}
+	return MinMP[hp];
+}
+
+// int minMana(int hp)
+// {
+// 	for (int i = 0; i < MinMP.size(); ++i)
+// 		if (MinMP[i] >= hp)
+// 			return i;
+// }
 
 int main()
 {
-	int n;
-	getI(n);
-	vvii AdjList(n);
-	int arr[n];
-	F(i,0,n)
-		scanf("%d", &arr[i]);
-	F(j,0,n)
+	int magias = 1; 
+	int nodes = 1;
+	int edges = 1; 
+	int monsters = 1;
+	while (magias + nodes + edges + monsters != 0)
 	{
-		int x, y;
-		getII(x,y);
-		AdjList[j].pb(mp(x,y)); // adicionando o pair nó + custo a lista de adjacencia
-	}
-	vi visitOrder;
-	visitOrder.pb(0);
-	vector<bool> visited(n, false);
-	visited[0] = true;
-	queue<int> q;
-	q.push(0);
-	while(!q.empty())
-	{
-		int node = q.front();
-		q.pop();
-		for(int elem = 0; elem < AdjList[node].size(); ++elem)
+		cin >> magias >> nodes >> edges >> monsters;
+		if (magias + nodes + edges + monsters == 0)
+			break;
+		
+		
+		for (int j = 0; j < magias; j++)
 		{
-			if(visited[AdjList[node][elem].fi] == false)
-			{
-				visited[AdjList[node][elem].fi] = true;
-				visitOrder.pb(AdjList[node][elem].fi);
-				q.push(AdjList[node][elem].fi);
-			}
+			int a, b;
+			cin >> a >> b;
+			Magia.push_back(mp(a, b));
 		}
-	}
-	vector<bool> eliminado(n, false);
-	int ans = 0;
-	vi Dist(n, INF);
-	for(int no = 0; no < visitOrder.size(); ++no)
-	{
-		if(eliminado[no] == false || eliminado[no] == true)
+		sort(Magia.begin(), Magia.end());
+		for (int k = 0; k < edges; k++)
 		{
-			fill(Dist.begin(), Dist.end(), INF);
-			queue<int> fila;
-			int root = visitOrder[no];
-			Dist[root] = 0;
-			fila.push(root);
-			while(!fila.empty())
+			int x, y;
+			cin >> x >> y;
+			Edges.push_back(mp(x,y));
+		}
+		//KnapSack
+		MinMP[0] = 0;
+		for (int q = 1; q < 1001; q++)
+			knapsack(q);
+		//fim knapsack
+		//Calculando qual o minimo necessario para passar por cada quarto
+		for (int m = 0; m < monsters; m++)
+		{
+			int h, p;
+			cin >> h >> p;
+			CostPerRoom[h] += MinMP[p];
+		}
+		//preenchendo o grafo de acordo com os valores calculados anteriormente 
+		for(int i = 0; i < edges; i++)
+		{
+			ii e = Edges[i];
+			AdjList[e.first].push_back(mp(CostPerRoom[e.second], e.second));
+			AdjList[e.second].push_back(mp(CostPerRoom[e.first], e.first));
+		}
+		//Dijkstra
+		Dist[1] = 0;
+		priority_queue<ii, vii, greater<ii> > q;
+		q.push(mp(0,1));
+		while (!q.empty())
+		{
+			ii front = q.top();
+			q.pop();
+			int d = front.first;
+			int u = front.second;
+			if(d > Dist[u])
+				continue;
+			for (int i = 0; i < AdjList[u].size(); ++i)
 			{
-				int u = fila.front();
-				fila.pop();
-				F(vertex, 0, AdjList[u].size())
+				ii v = AdjList[u][i];
+				if (Dist[u] + v.first < Dist[v.second])
 				{
-					if(eliminado[u] == true)
-						eliminado[AdjList[u][vertex].fi] = true;
-					if(Dist[AdjList[u][vertex].fi] == INF)
-					{
-						Dist[AdjList[u][vertex].fi] = Dist[u] + AdjList[u][vertex].se;
-						if(Dist[AdjList[u][vertex].fi] > arr[AdjList[u][vertex].fi])
-						{
-							eliminado[AdjList[u][vertex].fi] = true;
-						}
-						fila.push(AdjList[u][vertex].fi);
-						if(eliminado[AdjList[u][vertex].fi] == true)
-							ans++;
-					}
+					Dist[v.se] = Dist[u] + v.fi;
+					q.push(mp(Dist[v.se], v.se));
 				}
 			}
 		}
+		if (Dist[nodes] == INF)
+			cout << "-1" << endl;
+		else
+			cout << Dist[nodes] + CostPerRoom[1]<< endl;
+		Magia.clear();
+		Edges.clear();
+		fill(Dist.begin(), Dist.end(), INF);
+		fill(CostPerRoom.begin(), CostPerRoom.end(), 0);
+		//fill(CostPerMonsterLife.begin(), CostPerMonsterLife.end(), INF);
+		fill(MinMP.begin(), MinMP.end(), INF);
+		for (int i = 0; i < AdjList.size(); ++i)
+			AdjList[i].clear();
 	}
-	cout << ans << endl;
 	return 0;
-
 }

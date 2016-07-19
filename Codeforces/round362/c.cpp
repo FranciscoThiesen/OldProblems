@@ -17,7 +17,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <string>
-#include <functional>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -59,7 +58,7 @@ using namespace std;
 #define ui unsigned int
 #define us unsigned short
 #define IOS ios_base::sync_with_stdio(0); //to synchronize the input of cin and scanf
-#define INF 100000001
+#define INF 1001001001
 #define PI 3.1415926535897932384626
 //for map, pair
 #define mp make_pair
@@ -77,80 +76,138 @@ typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-typedef vector<ii> vii;
-typedef vector<vii> vvii;
+#define par pair<ull, ull>
 
-
-int main()
+vector<pair<pair<ull, ull>, ull> > arestas;
+ull solve(ull a, ull b, int type, int cost)
 {
-	int n;
-	getI(n);
-	vvii AdjList(n);
-	int arr[n];
-	F(i,0,n)
-		scanf("%d", &arr[i]);
-	F(j,0,n)
+	ull ans = 0;
+	unordered_set<ull> ancestorA;
+	ull start = a;
+	vector<ull> caminhoA;
+	caminhoA.pb(a);
+	ancestorA.insert(a);
+	for(;;)
 	{
-		int x, y;
-		getII(x,y);
-		AdjList[j].pb(mp(x,y)); // adicionando o pair nó + custo a lista de adjacencia
+		if(start <= 1)
+			break;
+		start /= 2;
+		ancestorA.insert(start);
+		caminhoA.pb(start);
+		
 	}
-	vi visitOrder;
-	visitOrder.pb(0);
-	vector<bool> visited(n, false);
-	visited[0] = true;
-	queue<int> q;
-	q.push(0);
-	while(!q.empty())
+	ull startB = b;
+	vector<ull> caminhoB;
+	caminhoB.pb(b);
+	ull lca = 1;
+	for(;;)
 	{
-		int node = q.front();
-		q.pop();
-		for(int elem = 0; elem < AdjList[node].size(); ++elem)
+		if(startB <= 1)
+			break;
+		startB /= 2;
+		caminhoB.pb(startB);
+		if(ancestorA.find(startB) != ancestorA.end())
 		{
-			if(visited[AdjList[node][elem].fi] == false)
-			{
-				visited[AdjList[node][elem].fi] = true;
-				visitOrder.pb(AdjList[node][elem].fi);
-				q.push(AdjList[node][elem].fi);
-			}
+			lca = startB;
+			break;
 		}
 	}
-	vector<bool> eliminado(n, false);
-	int ans = 0;
-	vi Dist(n, INF);
-	for(int no = 0; no < visitOrder.size(); ++no)
+	bool t;
+	if(type == 1)
 	{
-		if(eliminado[no] == false || eliminado[no] == true)
+		F(w, 0, caminhoA.size()-1)
 		{
-			fill(Dist.begin(), Dist.end(), INF);
-			queue<int> fila;
-			int root = visitOrder[no];
-			Dist[root] = 0;
-			fila.push(root);
-			while(!fila.empty())
+			t = false;
+			if(caminhoA[w] != lca)
 			{
-				int u = fila.front();
-				fila.pop();
-				F(vertex, 0, AdjList[u].size())
+				for(auto & p : arestas)
 				{
-					if(eliminado[u] == true)
-						eliminado[AdjList[u][vertex].fi] = true;
-					if(Dist[AdjList[u][vertex].fi] == INF)
+					if(p.first.first == caminhoA[w] && p.first.second == caminhoA[w+1])
 					{
-						Dist[AdjList[u][vertex].fi] = Dist[u] + AdjList[u][vertex].se;
-						if(Dist[AdjList[u][vertex].fi] > arr[AdjList[u][vertex].fi])
-						{
-							eliminado[AdjList[u][vertex].fi] = true;
-						}
-						fila.push(AdjList[u][vertex].fi);
-						if(eliminado[AdjList[u][vertex].fi] == true)
-							ans++;
+						t = true;
+						p.second += cost;
+						break;
 					}
+				}	
+				if(t == false)
+					arestas.pb(mp(mp(caminhoA[w], caminhoA[w+1]), cost));
+			}
+			else
+				break;
+		}
+		F(w, 0, caminhoB.size()-1)
+		{
+			t = false;
+			if(caminhoB[w] != lca)
+			{
+				for(auto & p : arestas)
+				{
+					if(p.first.first == caminhoB[w] && p.first.second == caminhoB[w+1])
+					{
+						t = true;
+						p.second += cost;
+						break;
+					}
+				}	
+				if(t == false)
+					arestas.pb(mp(mp(caminhoB[w], caminhoB[w+1]), cost));
+			}
+			else
+				break;
+		}
+		return 0;
+	}
+	if(type == 2)
+	{
+		F(w, 0, caminhoA.size()-1)
+		{
+			if(caminhoA[w] == lca)
+				break;
+			for(auto & p : arestas)
+			{
+				if(p.first.first == caminhoA[w] && p.first.second == caminhoA[w+1])
+				{
+					ans += p.second;
+					break;
 				}
 			}
 		}
+		F(w, 0, caminhoB.size()-1)
+		{
+			if(caminhoB[w] == lca)
+				break;
+			for(auto & p : arestas)
+			{
+				if(p.first.first == caminhoB[w] && p.first.second == caminhoB[w+1])
+				{
+					ans += p.second;
+					break;
+				}
+			}
+		}
+		return ans;
+
 	}
-	cout << ans << endl;
 	return 0;
 
+
+}
+int main()
+{
+	int q;
+	getI(q);
+	F(i,0,q)
+	{
+		int a;
+		ull b, c, d;
+		cin >> a >> b >> c;
+		if(a == 1)
+		{
+			cin >> d;
+			solve(b,c,1,d);
+		}
+		else
+			cout << solve(min(b,c),max(b,c),2,0) << endl;
+	}
+	return 0;
 }

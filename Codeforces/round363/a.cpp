@@ -17,7 +17,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <string>
-#include <functional>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -26,7 +25,6 @@ using namespace std;
 #define bit(x,i) (x&(1<<i))  //select the bit of position i of x
 #define lowbit(x) ((x)&((x)^((x)-1))) //get the lowest bit of x
 #define hBit(msb,n) asm("bsrl %1,%0" : "=r"(msb) : "r"(n)) //get the highest bit of x, maybe the fastest
-#define max(a,b) (a<b?b:a)
 #define IN(i,l,r) (l<i&&i<r) //the next for are for checking bound
 #define LINR(i,l,r) (l<=i&&i<=r)
 #define LIN(i,l,r) (l<=i&&i<r)
@@ -59,7 +57,7 @@ using namespace std;
 #define ui unsigned int
 #define us unsigned short
 #define IOS ios_base::sync_with_stdio(0); //to synchronize the input of cin and scanf
-#define INF 100000001
+#define INF 1001001001
 #define PI 3.1415926535897932384626
 //for map, pair
 #define mp make_pair
@@ -77,80 +75,38 @@ typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-typedef vector<ii> vii;
-typedef vector<vii> vvii;
-
 
 int main()
 {
 	int n;
 	getI(n);
-	vvii AdjList(n);
-	int arr[n];
+	string s;
+	cin >> s;
+	vector<int> num;
 	F(i,0,n)
-		scanf("%d", &arr[i]);
+	{
+		int x;
+		getI(x);
+		num.pb(x);
+	}
+	int mostRight = -1;
+	int minTime = INF;
 	F(j,0,n)
 	{
-		int x, y;
-		getII(x,y);
-		AdjList[j].pb(mp(x,y)); // adicionando o pair nó + custo a lista de adjacencia
-	}
-	vi visitOrder;
-	visitOrder.pb(0);
-	vector<bool> visited(n, false);
-	visited[0] = true;
-	queue<int> q;
-	q.push(0);
-	while(!q.empty())
-	{
-		int node = q.front();
-		q.pop();
-		for(int elem = 0; elem < AdjList[node].size(); ++elem)
+		if(s[j] == 'L')
 		{
-			if(visited[AdjList[node][elem].fi] == false)
+			if(mostRight != -1)
 			{
-				visited[AdjList[node][elem].fi] = true;
-				visitOrder.pb(AdjList[node][elem].fi);
-				q.push(AdjList[node][elem].fi);
+				minTime = min(minTime, (num[j] - mostRight)/2);
+				mostRight = -1;
 			}
 		}
+		if(s[j] == 'R')
+			mostRight = num[j];
 	}
-	vector<bool> eliminado(n, false);
-	int ans = 0;
-	vi Dist(n, INF);
-	for(int no = 0; no < visitOrder.size(); ++no)
-	{
-		if(eliminado[no] == false || eliminado[no] == true)
-		{
-			fill(Dist.begin(), Dist.end(), INF);
-			queue<int> fila;
-			int root = visitOrder[no];
-			Dist[root] = 0;
-			fila.push(root);
-			while(!fila.empty())
-			{
-				int u = fila.front();
-				fila.pop();
-				F(vertex, 0, AdjList[u].size())
-				{
-					if(eliminado[u] == true)
-						eliminado[AdjList[u][vertex].fi] = true;
-					if(Dist[AdjList[u][vertex].fi] == INF)
-					{
-						Dist[AdjList[u][vertex].fi] = Dist[u] + AdjList[u][vertex].se;
-						if(Dist[AdjList[u][vertex].fi] > arr[AdjList[u][vertex].fi])
-						{
-							eliminado[AdjList[u][vertex].fi] = true;
-						}
-						fila.push(AdjList[u][vertex].fi);
-						if(eliminado[AdjList[u][vertex].fi] == true)
-							ans++;
-					}
-				}
-			}
-		}
-	}
-	cout << ans << endl;
+	if(minTime == INF)
+		cout << -1 << endl;
+	else
+		cout << minTime << endl;
 	return 0;
-
 }
