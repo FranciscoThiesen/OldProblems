@@ -78,35 +78,16 @@ typedef pair<int,int> ii;
 
 int main()
 {
-	int n;
-	getI(n);
-	string s;
-	cin >> s;
-	vector<int> num;
-	F(i,0,n)
+	int t;
+	getI(t);
+	while(t--)
 	{
-		int x;
-		getI(x);
-		num.pb(x);
+		string s;
+		cin >> s;
+		set<char> ans;
+		for(auto& p : s)
+			ans.insert(p);
+		cout << ans.size() << endl;
 	}
-	int mostRight = -1;
-	int minTime = INF;
-	F(j,0,n)
-	{
-		if(s[j] == 'L')
-		{
-			if(mostRight != -1)
-			{
-				minTime = min(minTime, (num[j] - mostRight)/2);
-				mostRight = -1;
-			}
-		}
-		if(s[j] == 'R')
-			mostRight = num[j];
-	}
-	if(minTime == INF)
-		cout << -1 << endl;
-	else
-		cout << minTime << endl;
 	return 0;
 }

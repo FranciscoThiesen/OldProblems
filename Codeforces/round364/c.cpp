@@ -80,33 +80,17 @@ int main()
 {
 	int n;
 	getI(n);
-	string s;
-	cin >> s;
-	vector<int> num;
+	vector<ii> pares;
 	F(i,0,n)
 	{
 		int x;
-		getI(x);
-		num.pb(x);
+		cin >> x;
+		pares.pb(mp(x, i));
 	}
-	int mostRight = -1;
-	int minTime = INF;
-	F(j,0,n)
+	sort(pares.begin(), pares.end());
+	F(i,0,n/2)
 	{
-		if(s[j] == 'L')
-		{
-			if(mostRight != -1)
-			{
-				minTime = min(minTime, (num[j] - mostRight)/2);
-				mostRight = -1;
-			}
-		}
-		if(s[j] == 'R')
-			mostRight = num[j];
-	}
-	if(minTime == INF)
-		cout << -1 << endl;
-	else
-		cout << minTime << endl;
-	return 0;
+		cout << pares[i].second+1 << " " << pares[n-i-1].second+1 << endl;
+ 	}
+ 	return 0;
 }

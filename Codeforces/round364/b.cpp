@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <string>
+#include <cstdint>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -78,35 +79,20 @@ typedef pair<int,int> ii;
 
 int main()
 {
-	int n;
-	getI(n);
-	string s;
-	cin >> s;
-	vector<int> num;
-	F(i,0,n)
+	long long int n, m;
+	cin >> n >> m;
+	unordered_set<int> col;
+	unordered_set<int> row;
+	int rook = 0;
+	F(i,0,m)
 	{
-		int x;
-		getI(x);
-		num.pb(x);
+		int x, y;
+		getII(x,y);
+		col.insert(x);
+		row.insert(y);
+		rook++;
+		long long int ans = (col.size()*n + row.size()*n )- (row.size() * col.size());
+		printf("%I64d ",(n *n)- ans);
 	}
-	int mostRight = -1;
-	int minTime = INF;
-	F(j,0,n)
-	{
-		if(s[j] == 'L')
-		{
-			if(mostRight != -1)
-			{
-				minTime = min(minTime, (num[j] - mostRight)/2);
-				mostRight = -1;
-			}
-		}
-		if(s[j] == 'R')
-			mostRight = num[j];
-	}
-	if(minTime == INF)
-		cout << -1 << endl;
-	else
-		cout << minTime << endl;
 	return 0;
 }

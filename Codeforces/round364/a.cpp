@@ -80,33 +80,31 @@ int main()
 {
 	int n;
 	getI(n);
-	string s;
-	cin >> s;
-	vector<int> num;
-	F(i,0,n)
+	set<char> letras;
+	string a;
+	cin >> a;
+	F(i,0,a.size())
+		letras.insert(a[i]);
+	unordered_map<char, int> freq;
+	for(auto& p : letras)
+		freq.insert(mp(p, -1));
+	int ans = INF;
+	F(j,0,a.size())
 	{
-		int x;
-		getI(x);
-		num.pb(x);
-	}
-	int mostRight = -1;
-	int minTime = INF;
-	F(j,0,n)
-	{
-		if(s[j] == 'L')
+		int mn = INF;
+		int mx = -1;
+		freq[a[j]] = j;
+		for(auto& p : freq)
 		{
-			if(mostRight != -1)
-			{
-				minTime = min(minTime, (num[j] - mostRight)/2);
-				mostRight = -1;
-			}
+			if(p.second > mx)
+				mx = p.second;
+			if(p.second < mn)
+				mn = p.second;
 		}
-		if(s[j] == 'R')
-			mostRight = num[j];
+		if(mn != -1)
+			ans = min(ans, mx - mn);
+
 	}
-	if(minTime == INF)
-		cout << -1 << endl;
-	else
-		cout << minTime << endl;
+	cout << ans + 1 << endl;
 	return 0;
 }

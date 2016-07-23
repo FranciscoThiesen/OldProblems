@@ -16,7 +16,10 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <functional>
+#include <utility>
 #include <string>
+#include <string.h>
 using namespace std;
 #define gcd                         __gcd
 #define OR |
@@ -76,37 +79,74 @@ typedef vector<int> vi;
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
 
+long long bc(ll n, ll k)
+{
+    vector<ll> C(k+1);
+    fill(C.begin(), C.end(), 0); 
+    C[0] = 1;  // nC0 is 1
+ 
+    for (long long i = 1; i <= n; i++)
+    {
+        // Compute next row of pascal triangle using
+        // the previous row
+        for (long long j = min(i, k); j > 0; j--)
+            C[j] = C[j] + C[j-1];
+    }
+    return C[k];
+}
+
 int main()
 {
-	int n;
-	getI(n);
+	unsigned long long ans = 0;
 	string s;
 	cin >> s;
-	vector<int> num;
-	F(i,0,n)
+	unordered_map<char, int> freq;
+	F(i,0,26)
+		freq.insert(mp('a' + i, 0));
+	F(i,0,s.size())
 	{
-		int x;
-		getI(x);
-		num.pb(x);
+		freq[s[i]]++;
 	}
-	int mostRight = -1;
-	int minTime = INF;
-	F(j,0,n)
+	unordered_set<char> jaFoi;
+	F(i,0,s.size()-3)
 	{
-		if(s[j] == 'L')
+		char fst = s[i];
+		unordered_map<char, int> freq1;
+		int last = -1;
+		if(freq[fst] > 1 && jaFoi.find(fst) == jaFoi.end())
 		{
-			if(mostRight != -1)
+			F(k,i+1, s.size())
+				if(s[k] == fst)
+					last = k;
+			if(last > i + 2)
 			{
-				minTime = min(minTime, (num[j] - mostRight)/2);
-				mostRight = -1;
+				F(j, i+1, min((int)last+1,(int)s.size()))
+				{
+					if(freq1.find(s[j]) == freq1.end())
+						freq1.insert(mp(s[j], 1));
+					else
+						freq1[s[j]]++;
+					if(s[j] == fst && j > i+2)
+					{
+						for(auto& p : freq1)
+						{
+
+							if(p.first == fst && p.second >= 3)
+							{	
+								ans += (bc(p.second-1, 2)%1000000007);
+							}
+							else if(p.first != fst && p.second >= 2)
+							{
+								ans += (bc(p.second, 2)%1000000007);
+							}
+						}
+					}
+
+				}
 			}
 		}
-		if(s[j] == 'R')
-			mostRight = num[j];
+		freq1.clear();
 	}
-	if(minTime == INF)
-		cout << -1 << endl;
-	else
-		cout << minTime << endl;
+	cout << ans%1000000007 << endl;
 	return 0;
 }
