@@ -44,61 +44,25 @@ typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-typedef vector<ii> vii;
-// componentes conexos
-vector<vii> AdjList(10001);
-vi visited(10001,0);
-set<int> componente;
-int ans;
-void dfs(int src)
-{
-	for(auto& p : AdjList[src])
-	{
-		if(visited[p.first] == 0)
-		{
-			visited[p.first]++;
-			componente.insert(p.first);
-			dfs(p.first);
-		}
-		ans += p.second;
-		
-	}
-}
-
 
 int main()
 {
-	int n, m;
-	getII(n,m);
-	F(i,0,m)
+	string s;
+	cin >> s;
+	char start = 'a';
+	int ans = 0;
+	for(auto& p : s)
 	{
-		int a, b, c;
-		getIII(a,b, c);
-		AdjList[a-1].pb(mp(b-1,c));
-		AdjList[b-1].pb(mp(a-1,c));
-	}
-	double best = 100000;
-	int bestHouse = -1;
-	F(i,0,n)
-	{
-
-		if(!visited[i])
+		if(p < start)
 		{
-			visited[i]++;
-			ans = 0;
-			componente.clear();
-			componente.insert(i);
-			dfs(i);
-			int a =*max_element(componente.begin(), componente.end());
-
-			double avg = ((double)ans/((double)componente.size()*(componente.size()-1)))/2.0;
-			if(avg == best)
-				bestHouse = max(bestHouse, a), best = avg;
-			else if(((double)ans/((double)componente.size()*(componente.size()-1)))/2.0 < best)
-				bestHouse = a, best = avg;	
+			ans += min(start-p, 26-start+p);
 		}
+		else if(p > start)
+		{
+			ans += min(p-start, start - 'a' + ('z' - p) + 1);
+		}
+		start = p;
 	}
-	cout << bestHouse + 1 << endl;
+	cout << ans << endl;
 	return 0;
-	
 }

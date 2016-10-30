@@ -44,61 +44,72 @@ typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-typedef vector<ii> vii;
-// componentes conexos
-vector<vii> AdjList(10001);
-vi visited(10001,0);
-set<int> componente;
-int ans;
-void dfs(int src)
-{
-	for(auto& p : AdjList[src])
-	{
-		if(visited[p.first] == 0)
-		{
-			visited[p.first]++;
-			componente.insert(p.first);
-			dfs(p.first);
-		}
-		ans += p.second;
-		
-	}
-}
-
 
 int main()
 {
-	int n, m;
-	getII(n,m);
-	F(i,0,m)
-	{
-		int a, b, c;
-		getIII(a,b, c);
-		AdjList[a-1].pb(mp(b-1,c));
-		AdjList[b-1].pb(mp(a-1,c));
-	}
-	double best = 100000;
-	int bestHouse = -1;
-	F(i,0,n)
-	{
-
-		if(!visited[i])
-		{
-			visited[i]++;
-			ans = 0;
-			componente.clear();
-			componente.insert(i);
-			dfs(i);
-			int a =*max_element(componente.begin(), componente.end());
-
-			double avg = ((double)ans/((double)componente.size()*(componente.size()-1)))/2.0;
-			if(avg == best)
-				bestHouse = max(bestHouse, a), best = avg;
-			else if(((double)ans/((double)componente.size()*(componente.size()-1)))/2.0 < best)
-				bestHouse = a, best = avg;	
-		}
-	}
-	cout << bestHouse + 1 << endl;
-	return 0;
 	
+	string s;
+	cin >> s;
+	
+	bool possible = false;
+	string alpha = "ABCDEFGHIJKLMNOPQRSTUVXWYZ";
+	F(i,0,s.size()-25)
+	{
+		int sub = 0;
+		vector<char> missin;
+		unordered_set<char> let;
+		bool rep = false;
+		F(j,i,i+26)
+		{
+			if(s[j] == '?')
+				sub++;
+			else
+			{
+			 	if(let.find(s[j]) != let.end())
+				{
+					rep = true;
+					break;
+				}
+				else
+					let.insert(s[j]);
+			}		
+		}
+		if(rep)
+			continue;
+		F(k,0,alpha.size())
+		{
+			if(let.find(alpha[k]) == let.end())
+				missin.pb(alpha[k]);
+				
+		}                                                               
+		if(missin.size() == sub)
+		{
+			F(q,0,missin.size())
+			{
+				F(j,i,i+26)
+				{
+					if(s[j] == '?')
+					{
+						s[j] = missin[q];
+						break;
+					}	
+				}
+			}
+			possible = true;
+			break;
+		}
+		
+		
+	}
+	
+	if(possible)
+	{
+		F(i,0,s.size())
+			if(s[i] == '?')
+				s[i] = 'A';
+		cout << s << endl;
+	}
+	else
+		cout << -1 << endl;
+	return 0;	
 }

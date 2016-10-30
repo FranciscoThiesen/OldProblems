@@ -44,61 +44,31 @@ typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-typedef vector<ii> vii;
-// componentes conexos
-vector<vii> AdjList(10001);
-vi visited(10001,0);
-set<int> componente;
-int ans;
-void dfs(int src)
-{
-	for(auto& p : AdjList[src])
-	{
-		if(visited[p.first] == 0)
-		{
-			visited[p.first]++;
-			componente.insert(p.first);
-			dfs(p.first);
-		}
-		ans += p.second;
-		
-	}
+
+
+typedef pair<int, int> bezout;
+bezout find_bezout(int x, int y) { if (y == 0) return bezout(1, 0); bezout u = find_bezout(y, x % y); return bezout(u.second, u.first - (x/y) * u.second);
 }
 
 
+int mod(int x, int m) { return x % m + (x < 0) ? m : 0; }
+int solve_mod(int a, int b, int m) { if (m < 0) return solve_mod(a, b, -m); if (a < 0 || a >= m || b < 0 || b >= m)
+ return solve_mod(mod(a, m), mod(b, m), m); bezout t = find_bezout(a, m); int d = t.first * a + t.second * m; if (b % d) return -1; else return mod(t.first * (b / d), m);
+}
+
 int main()
 {
-	int n, m;
-	getII(n,m);
-	F(i,0,m)
+	int l;
+	getI(l);
+	int cur = 2;
+	for(int i = 1; i <= l; ++i)
 	{
-		int a, b, c;
-		getIII(a,b, c);
-		AdjList[a-1].pb(mp(b-1,c));
-		AdjList[b-1].pb(mp(a-1,c));
-	}
-	double best = 100000;
-	int bestHouse = -1;
-	F(i,0,n)
-	{
-
-		if(!visited[i])
-		{
-			visited[i]++;
-			ans = 0;
-			componente.clear();
-			componente.insert(i);
-			dfs(i);
-			int a =*max_element(componente.begin(), componente.end());
-
-			double avg = ((double)ans/((double)componente.size()*(componente.size()-1)))/2.0;
-			if(avg == best)
-				bestHouse = max(bestHouse, a), best = avg;
-			else if(((double)ans/((double)componente.size()*(componente.size()-1)))/2.0 < best)
-				bestHouse = a, best = avg;	
-		}
-	}
-	cout << bestHouse + 1 << endl;
+		int x = solve_mod(i+1, 0, i);
+		cout << i + 1  << " " << i << endl;
+		cout << x << " a*x = " <<(i+1)*x;			
+		unsigned long long sqr = (i+1)*x*(i+1)*x;
+		cout << (sqr - cur)/i << endl;
+		cur = (i+1)*x;
+	}                                                               
 	return 0;
-	
 }

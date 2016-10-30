@@ -44,61 +44,65 @@ typedef int elem_t;
 typedef vector<int> vi; 
 typedef vector<vi> vvi; 
 typedef pair<int,int> ii; 
-typedef vector<ii> vii;
-// componentes conexos
-vector<vii> AdjList(10001);
-vi visited(10001,0);
-set<int> componente;
-int ans;
-void dfs(int src)
-{
-	for(auto& p : AdjList[src])
-	{
-		if(visited[p.first] == 0)
-		{
-			visited[p.first]++;
-			componente.insert(p.first);
-			dfs(p.first);
-		}
-		ans += p.second;
-		
-	}
-}
-
 
 int main()
 {
-	int n, m;
-	getII(n,m);
-	F(i,0,m)
+	string s;
+	cin >> s;
+	char seat = s[s.size()-1];
+	string num;
+	F(i,0,s.size()-1)
+		num += s[i];
+	ull n = stoull(num);
+	int att;
+	if(n%4 == 1 || n%4 == 2)
+		att = 1;
+	else
+		att = 2;
+	ull ans = 0;
+	ull jmp;
+	if(att == 1)
 	{
-		int a, b, c;
-		getIII(a,b, c);
-		AdjList[a-1].pb(mp(b-1,c));
-		AdjList[b-1].pb(mp(a-1,c));
+		ans = n/2;
+		ans = ans*6;
+		jmp = n/4;
+		ans += jmp*3 + (n/2 - jmp);
+		if(seat == 'f')
+			ans++;
+		else if(seat == 'e')
+			ans+=2;
+		else if(seat == 'd')
+			ans+=3;
+		else if(seat == 'a')
+			ans+=4;
+		else if(seat == 'b')
+			ans+=5;
+		else
+			ans+=6;
 	}
-	double best = 100000;
-	int bestHouse = -1;
-	F(i,0,n)
+	else
 	{
-
-		if(!visited[i])
+		ans = n/2 - 1;
+		ans = ans*6;
+		if(n%4 == 0)
 		{
-			visited[i]++;
-			ans = 0;
-			componente.clear();
-			componente.insert(i);
-			dfs(i);
-			int a =*max_element(componente.begin(), componente.end());
-
-			double avg = ((double)ans/((double)componente.size()*(componente.size()-1)))/2.0;
-			if(avg == best)
-				bestHouse = max(bestHouse, a), best = avg;
-			else if(((double)ans/((double)componente.size()*(componente.size()-1)))/2.0 < best)
-				bestHouse = a, best = avg;	
+			ull tmp = n++;
+			ans += (tmp/4 - 1)*3;
+			ans += n/2 - 1 - (tmp/4-1);
 		}
+	        if(seat == 'f')
+			ans++;
+		else if(seat == 'e')
+			ans+=2;
+		else if(seat == 'd')
+			ans+=3;
+		else if(seat == 'a')
+			ans+=4;
+		else if(seat == 'b')
+			ans+=5;
+		else
+			ans+=6;
 	}
-	cout << bestHouse + 1 << endl;
+	cout << ans << endl;
 	return 0;
-	
 }
