@@ -4,7 +4,7 @@
 
 
 
-My accounts on those a few of those sites are listed below:
+My accounts on a few of those sites are listed below:
 
 https://www.urionlinejudge.com.br/judge/pt/profile/54671 -> Top Student from my University
 

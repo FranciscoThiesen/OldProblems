@@ -1,12 +1,4 @@
-#include <cstdio>
-#include <vector>
-#include <cmath>
-#include <stack>
-#include <queue>
-#include <utility>
-#include <functional>
-#include <algorithm>
-#include <iostream>
+#include <bits/stdc++.h>
 #define MAXN 1000
 using namespace std;
 
@@ -114,13 +106,10 @@ long long constructBlockingFlow(int source, int sink)
 long long Dinic(int source, int sink)
 {
     int ret = 0;
-    cout << "bu";
     while(buildLevelGraph(source, sink))
     {   
-        cout << "ce";
         ret+= constructBlockingFlow(source,sink);
     }
-    cout << "ta" << endl;
     return ret;
 }
 
