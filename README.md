@@ -2,7 +2,7 @@
 
 ## Here you'll find my solutions to several problems hosted on some Online Judges.
 
-### My solutions aren't always pretty, sometimes they are a bit obfuscated, sometimes they contain some dirty macros. Please keep in mind that in Competitive Programming Contest we don't usually have much time to solve each problem, so we must solve it as fast as we can. In my opinion, what matters the most on Competitive Programming are the clever underlying ideas behind the solutions.
+### My solutions aren't always pretty, sometimes they are a bit obfuscated, sometimes they contain some dirty macros. Please keep in mind that in Competitive Programming Contests we don't usually have much time to solve each problem, so we must solve it as fast as we can. In my opinion, what matters the most on Competitive Programming are the clever underlying ideas behind the solutions.
 
 
 ### //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
