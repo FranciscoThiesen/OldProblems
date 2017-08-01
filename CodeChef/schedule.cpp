@@ -1,103 +1,146 @@
-/*input
-2
-9 2
-110001111
-4 1
-1001
-*/
+// https://www.codechef.com/MARCH17/problems/SCHEDULE
 #include <bits/stdc++.h>
-
+ 
 using namespace std;
-
-#define pb push_back
-#define mp make_pair
+ 
+#define all(v) (v).begin(), (v).end()
 #define fi first
 #define se second
-#define all(v) (v).begin(), (v).end()
-#define uniq(v) (v).erase(unique(all(v)), v.end())
-#define IOS ios::sync_with_stdio(0);
-#define sz(a) (a).size()
-#define fr(a, b, c) for(int (a) = (b); (a) < (c); ++(a))
-#define rp(a, b) fr(a,0,b)
-#define cl(a, b) memset((a), (b), sizeof(a))
-#define sc(a) scanf("%d", &a)
-#define sc2(a, b) scanf("%d %d", &a, &b)
-#define sc3(a, b, c) scanf("%d %d %d", &a, &b, &c)
-#define pr(a) printf("%d\n", a);
-#define pr2(a, b) printf("%d %d\n", a, b)
-#define pr3(a, b, c) printf("%d %d %d\n", a, b, c)
-#define IOS ios::sync_with_stdio(0);
-
-typedef unsigned long long ull;
-typedef long long ll;
+#define mp make_pair
+#define fi first
+#define fr(i, a, b) for(int (i) = (a); (i) < (b); ++(i))
+#define fu(i, a) fr(i,0,a)
+#define sz(a) a.size()
+#define mt make_tuple
+#define pb push_back
+ 
 typedef vector<int> vi;
-typedef vector<vi> vvi;
-typedef pair<int, int> ii;
-typedef vector<ii> vii;
-typedef pair<ll, ll> pll;
 
-constexpr int inf = numeric_limits<int>::max();
-vvi c;
-
-void genPerm(int lowerLimit, vector<int> cur, int upperLimit, int op)
+bool check(vi freq, int maxMin, int k)
 {
-	if(sz(cur) <= op)
-		c.pb(cur);
-	if(cur.size() >= op)
-		return;
-	fr(i, 0, upperLimit)
+	int flips = 0;
+	if(maxMin == 1)//corner-case
 	{
-		vi aux = cur;
-		aux.pb(i);
-		if(aux.size() < op)
-			genPerm(i+1, aux, upperLimit, op);
-	}
-}
-
-int solve(vector<int>& vec)
-{
-
-	int greater = inf;
-	vi cpy;
-	rp(i, c.size())
-	{
-		cpy = vec;
-		rp(j,sz(c[i]))
-			cpy[j] = !cpy[j];
-		int mx = 1;
-		int cur = 1;
-		int elem = cpy[0];
-		rp(k, sz(vec))
+		int ans1 = 0;
+		int ans2 = 0;
+		bool rev = true;
+		fu(i, sz(freq))
 		{
-			if(cpy[k] == cur)cur++;
+			if(freq[i]%2 == 0)
+			{
+				ans1 += freq[i]/2;
+				ans2 += freq[i]/2;
+				rev = !rev;
+			}
 			else
 			{
-				cur = 1;
-				elem = cpy[k];
+				if(rev)
+				{
+					ans1 += freq[i]/2 + 1;
+					ans2 += freq[i]/2;
+				}
+				else
+				{
+					ans2 += freq[i]/2 + 1;
+					ans1 += freq[i]/2;
+				}
 			}
-			if(cur > mx)mx = cur;
+			if(ans1 > k && ans2 > k)return false;
 		}
-		greater = min(greater, mx);
+ 
 	}
-	return greater;
+	else
+	{
+		fu(i, sz(freq))
+		{
+			if(freq[i] <= maxMin)continue;
+			else flips += ceil((freq[i] - maxMin)/(maxMin+1.0));
+			if(flips > k)return false;
+		}
+	}
+	return true;
 }
+ 
+vi compress(string& s)
+{
+	vi f;
+	int prev = s[0] - '0'; int cur = 1;
+	fr(i, 1, sz(s))
+	{
+		if(s[i] - '0' == prev)cur++;
+		else
+		{
+			if(cur > 2)
+				f.pb(cur);
+			cur = 1;
+			prev = !prev;
+		}
+	}
+	if(cur > 2)
+		f.pb(cur);
+	return f;
+}
+ 
+vi compressSpecial(string& s)
+{
+	vi f;
+	int prev = s[0] - '0'; int cur = 1;
+	fr(i, 1, sz(s))
+	{
+		if(s[i] - '0' == prev)cur++;
+		else
+		{
+			f.pb(cur);
+			cur = 1;
+			prev = !prev;
+		}
+	}
+	f.pb(cur);
+	return f;
+}
+ 
+ 
+int bs(string s, int k)
+{
+	int lo = 1; 
+	int hi = s.size();
+	int mid;
+	vi freq1 = compress(s);
+	vi freqCornerCase = compressSpecial(s);
+	while(lo < hi)
+	{
+		mid = (hi + lo)/2;
+		if(mid == 1)//corner-case
+		{
+			if(check(freqCornerCase, mid, k))
+				hi = mid;
+			else
+				lo = mid + 1;	
+		}
+		else
+		{
+			if(check(freq1, mid, k))
+				hi = mid;
+			else
+				lo = mid + 1;
+		}
+	}
+	return lo;
+}
+ 
 int main()
 {
-	IOS;
+	ios::sync_with_stdio(0);
 	cin.tie(0);
 	int t;
 	cin >> t;
+	int n, k;
 	while(t--)
 	{
-		int n, k;
 		cin >> n >> k;
-		string s;
 		cin >> s;
-		vi nums;
-		rp(i, sz(s))nums.pb(s[i] - '0');
-		vi q;
-		genPerm(0, q, n, k);
-		cout << solve(nums) << endl;
+		cout << bs(s, k) << endl;
 	}
+ 
 	return 0;
-}
+} 
