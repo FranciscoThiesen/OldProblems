@@ -11,60 +11,61 @@
 103759
 0 0
 */
-#include <iostream>
+
 #include <vector>
-#include <stack>
 #include <utility>
+#include <iostream>
+#include <cmath>
+#include <map>
+#include <set>
+#include <unordered_set>
+#include <unordered_map>
+#include <cstdio>
 #include <algorithm>
 #include <string>
-#include <cstdio>
-#include <cmath>
-
+#include <cstring>
+#include <cstdlib>
+#include <stack>
+#include <deque>
+#include <queue>
+#define ins insert
+#define pb push_back
+#define mp make_pair
+#define fi first
+#define se second
 using namespace std;
 
 int main()
 {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    int n, d;
-    cin >> n >> d;
-    string s;
-
-    while(n+d){
-
-        cin >> s;
-        stack<int> pilha;
-        int to_rmv = d;
-        for(const char& c : s)
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+    int n = 1, d = 1;
+    while(n + d != 0)
+    {
+    	cin >> n >> d;
+        if(n+d == 0)
         {
-            if(!to_rmv)
-                pilha.push(c - '0');
-            else if(pilha.empty())
-                pilha.push(c - '0');
-            else{
-                while(!pilha.empty()){
-                    while(c - '0' > pilha.top() && to_rmv > 0){
-                        pilha.pop();
-                        to_rmv--;
-                        if(pilha.empty()) break;
-                    }
-                    pilha.push(c-'0');
-                    break;
-                }
-            }   
+            return 0;
         }
-        string word;
-        while(!pilha.empty()){
-            word += ('0' + pilha.top());
-            pilha.pop();
+        string s;
+        cin >> s;
+        multimap<int, int> digs;
+        for(int i = 0; i < n; ++i)
+        {
+        	digs.ins(mp(s[i]-'0', i));
         }
-        int end = word.size();
-        reverse(word.begin(), word.end());
-        for(int i = 0; i < end-to_rmv; ++i){
-            cout << word[i];   
+        map<int, int> printable;
+        for(auto it = digs.begin(); it != digs.end();++it)
+        {
+        	if(d > 0)
+                d--;
+            else
+                printable.ins(mp(it->second, it->first));
+            
         }
+        for(auto& p : printable)
+        	cout << p.se;
         cout << endl;
-        cin >> n >> d;
     }
-    return 0;   
+    return 0;
 }

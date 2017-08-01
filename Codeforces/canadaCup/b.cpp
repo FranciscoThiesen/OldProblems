@@ -90,7 +90,7 @@ int main()
 			ans += (tmp/4 - 1)*3;
 			ans += n/2 - 1 - (tmp/4-1);
 		}
-	        if(seat == 'f')
+	    if(seat == 'f')
 			ans++;
 		else if(seat == 'e')
 			ans+=2;

@@ -6,41 +6,41 @@ Fast Fourier Transform  3
 Logaritmo Discreto  1
 Combinatória (inclusão/exclusão, recorrências, etc) 5
 Cadeias de Markov   5
-Merge Sort  5
-Quick Sort  5
-Bucket Sort 5
-Busca Binária  5
-Busca Ternária 5
-DFS / BFS (bipartido, diâmetro, etc)   5
-Ordenação Topológica 5
-Tarjan (SCC, pontes, articulações, 2-SAT) 5
-Minimum Spanning Tree (Prim, Kruskal)   5
-Dijkstra    5
-Bellman-Ford    5
-Floyd-Warshall  5
+Merge Sort  5 -> OK
+Quick Sort  5 -> OK
+Bucket Sort 5 -> OK
+Busca Binária  5 -> OK
+Busca Ternária 5 -> OK
+DFS / BFS (bipartido, diâmetro, etc)   5 -> OK
+Ordenação Topológica 5 -> OK
+Tarjan (SCC, pontes, articulações, 2-SAT) 5 -> OK
+Minimum Spanning Tree (Prim, Kruskal)   5 -> OK
+Dijkstra    5 -> OK
+Bellman-Ford    5 -> OK
+Floyd-Warshall  5 -> OK
 Busca A*    2
 Min Cut Max Flow (path cover, etc)  4
-Edmonds-Karp    5
-Dinic   4
-Hopcroft-Karp   4
+Edmonds-Karp    5 -> OK
+Dinic   4 -> OK
+Hopcroft-Karp   4 -> OK
 Vertex Cover    3
 Min Cost Max Flow   2
 Lowest Common Ancestor (LCA)    5
 Heavy-Light Decomposition   2
-Lista, Fila, Pilha, Deque, etc. 5
-Árvore Binária, Heap  5
+Lista, Fila, Pilha, Deque, etc. 5 -> OK
+Árvore Binária, Heap  5 -> OK
 Árvores Balanceadas    5
 Treap   2
-Disjoint Sets (Union-Find)  5
-Fenwick Tree (Binary Indexed Tree - BIT)    5
+Disjoint Sets (Union-Find)  5 -> OK
+Fenwick Tree (Binary Indexed Tree - BIT)    5 -> OK
 Segment Tree (w/ lazy propagation)  5
 Persistent Segment Tree 1
-SQRT-Decomposition  5
+SQRT-Decomposition  5 -> OK
 Big Num 3
-Convex Hull 5
+Convex Hull 5 -> OK
 Minimum Enclosing Circle    5
 Line Sweep  4
-PD Clássicas (Knapsack, LCS, LIS, Kadane, etc) 5
+PD Clássicas (Knapsack, LCS, LIS, Kadane, etc) 5 -> OK
 Técnicas de PD (Knuth opt, convex hull trick, etc) 3
 Meet in the Middle  4
 Knuth-Morris-Pratt (KMP)    5
