@@ -1,59 +1,56 @@
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <utility>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-int main()
-{
-    int n = 1;
-    double a = 1;
-    while(n + a != 0)
-    {
-    	cin >> n >> a;
-    	if(n+a == 0)
-    		return 0;
-    	long long tot = 0;
-    	int mx = -1;
-    	int freq[10001] = {0};
-    	for(int i = 0; i < n; ++i)
-    	{
-    		int x;
-    		scanf("%d", &x);
-    		freq[x]++;
-    		if(x > mx)
-    			mx = x;
-    		tot+= x;
-    	}
-    	if(a == tot)
-    		cout << ":D" << endl;
-    	else if(a > tot)
-    		cout << "-.-" << endl;
-    	else
-    	{
-    		double cur = 0;
-    		for(int k = mx; k >= 0; --k)
-    		{
-    			cur += freq[k];
-    			cout << cur << endl;
-    			cout << a << endl;
-    			if((int)cur == (int)a)
-    			{
-    				printf("%.4lf\n",cur);
-    				break;
-    			}
-    			if((int)cur > a)
-    			{
-    				cout << "-.-" << endl;
-    				break;
-    			}
-    		}
-    	}
-    	cout << "creu creu" << endl;
+#define fi first
+#define se second
+#define pb push_back
+#define mp make_pair
+#define all(v) (v).begin(), (v).end()
+#define fr(i,a,b) for(int (i) = (a); (i) < (b); ++(i))
+#define rp(i,n) fr(i,0,n)
 
-    }
-    return 0;
 
+typedef vector<int> vi;
+const int maxn = 1e5 + 1;
+
+main(){
+	int a, b;
+	while(scanf("%d %d", &a, &b) == 2){
+		if(a + b == 0) break;
+		vi freq(maxn, 0);
+		int h = -1;
+		int totalArea = 0;
+		rp(i, a){
+			int x;
+			scanf("%d", &x);
+			freq[x]++;
+			h = max(h, x);
+			totalArea += x;
+		}
+		int total = 0; // quantos blocos ja estao abaixo do corte
+		double lim = totalArea - b; // quanto precisamos de area
+		double cur = 0; // area abaixo do corte atual
+		bool cut = false;
+		if(fabs(lim) < 1e-9){
+			puts(":D");
+			continue;
+		}
+		if(lim < 0){
+			puts("-.-");
+			continue;
+		}
+		fr(i,1, h+1){
+			int blk = a - total;	// quantos blocos temos na altura > i
+			total += freq[i];
+			if(lim - cur <= blk*1.0){
+				// consigo resolver com um corte entre i-1 e i...
+				double c = i - 1 + (lim-cur)/blk;
+				cut = true;
+				printf("%.4lf\n", c);
+				break;
+			}
+			cur += blk;
+		}
+	}
 }

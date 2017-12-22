@@ -1,1 +1,1 @@
-CXXFLAGS := -std=c++14 $(CXXFLAGS)
+CXXFLAGS := -std=c++14 -O3 $(CXXFLAGS)
